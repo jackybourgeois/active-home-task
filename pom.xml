@@ -64,8 +64,8 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.activehome.service</groupId>
-            <artifactId>org.activehome.service.time</artifactId>
+            <groupId>org.activehome</groupId>
+            <artifactId>org.activehome.timekeeper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
