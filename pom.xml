@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.activehome</groupId>
     <artifactId>org.activehome.task</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Active Home :: Task</name>
     <description>A task scheduler to execute actions at a given time</description>
