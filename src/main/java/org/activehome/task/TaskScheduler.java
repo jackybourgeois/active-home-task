@@ -31,10 +31,7 @@ import org.activehome.com.Response;
 import org.activehome.com.ScheduledRequest;
 import org.activehome.service.RequestHandler;
 import org.activehome.service.Service;
-import org.kevoree.annotation.ComponentType;
-import org.kevoree.annotation.Input;
-import org.kevoree.annotation.Output;
-import org.kevoree.annotation.Start;
+import org.kevoree.annotation.*;
 import org.kevoree.log.Log;
 
 import java.util.HashMap;
@@ -51,6 +48,21 @@ import java.util.stream.Collectors;
  */
 @ComponentType
 public class TaskScheduler extends Service implements RequestHandler {
+
+    @Param(defaultValue = "A task scheduler to schedule jobs to execute at a given time.")
+    private String description;
+
+    @Param(defaultValue = "/activehome-task/master/docs/task.png")
+    private String img;
+
+    @Param(defaultValue = "/activehome-task/master/docs/task.md")
+    private String doc;
+
+    @Param(defaultValue = "/activehome-task/master/docs/task.kevs")
+    private String demoScript;
+
+    @Param(defaultValue = "/activehome-task")
+    private String src;
 
     @Output
     private org.kevoree.api.Port toExecute;
