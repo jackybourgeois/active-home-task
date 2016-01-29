@@ -6,7 +6,7 @@ package org.activehome.task;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2016 org.activehome
+ * Copyright (C) 2016 Active Home Project
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -51,17 +51,7 @@ public class TaskScheduler extends Service implements RequestHandler {
 
     @Param(defaultValue = "A task scheduler to schedule jobs to execute at a given time.")
     private String description;
-
-    @Param(defaultValue = "/activehome-task/master/docs/task.png")
-    private String img;
-
-    @Param(defaultValue = "/activehome-task/master/docs/task.md")
-    private String doc;
-
-    @Param(defaultValue = "/activehome-task/master/docs/task.kevs")
-    private String demoScript;
-
-    @Param(defaultValue = "/activehome-task")
+    @Param(defaultValue = "/active-home-task")
     private String src;
 
     @Output
@@ -142,7 +132,8 @@ public class TaskScheduler extends Service implements RequestHandler {
     public final void onResumeTime() {
         initExecutor();
         taskMap.values().stream().forEach(task -> {
-            long convertedExecTime = (task.getRequest().getExecTime() - getCurrentTime()) / getTic().getZip();
+            long convertedExecTime = (task.getRequest()
+                    .getExecTime() - getCurrentTime()) / getTic().getZip();
             ScheduledFuture sf = stpe.schedule(() -> manage(task.getRequest()),
                     convertedExecTime, TimeUnit.MILLISECONDS);
             task.setScheduledFuture(sf);
