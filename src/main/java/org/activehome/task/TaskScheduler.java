@@ -10,15 +10,15 @@ package org.activehome.task;
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 3 of the 
+ * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public 
+ *
+ * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
@@ -31,7 +31,11 @@ import org.activehome.com.Response;
 import org.activehome.com.ScheduledRequest;
 import org.activehome.service.RequestHandler;
 import org.activehome.service.Service;
-import org.kevoree.annotation.*;
+import org.kevoree.annotation.ComponentType;
+import org.kevoree.annotation.Input;
+import org.kevoree.annotation.Output;
+import org.kevoree.annotation.Param;
+import org.kevoree.annotation.Start;
 import org.kevoree.log.Log;
 
 import java.util.HashMap;
@@ -44,13 +48,14 @@ import java.util.stream.Collectors;
 
 /**
  * @author Jacky Bourgeois
- * @version %I%, %G%
  */
-@ComponentType
+@ComponentType(version = 1, description = "A task scheduler "
+        + "to schedule jobs to execute at a given time.")
 public class TaskScheduler extends Service implements RequestHandler {
 
-    @Param(defaultValue = "A task scheduler to schedule jobs to execute at a given time.")
-    private String description;
+    /**
+     * Where to find the sources (for the Active Home store).
+     */
     @Param(defaultValue = "/active-home-task")
     private String src;
 
@@ -73,7 +78,8 @@ public class TaskScheduler extends Service implements RequestHandler {
             ScheduledRequest sr = new ScheduledRequest(json.asObject());
             ScheduledFuture sf = null;
             if (!stpe.isShutdown()) {
-                long convertedExecTime = (sr.getExecTime() - getCurrentTime()) / getTic().getZip();
+                long convertedExecTime = (sr.getExecTime() - getCurrentTime())
+                        / getTic().getZip();
                 sf = stpe.schedule(() -> manage(sr),
                         convertedExecTime, TimeUnit.MILLISECONDS);
             }
@@ -84,31 +90,33 @@ public class TaskScheduler extends Service implements RequestHandler {
             if (req.getMethod().compareTo("cancel")
                     == 0 && req.getParams().length == 1
                     && req.getParams()[0] instanceof String) {
-                sendResponse(req, cancel(UUID.fromString((String) req.getParams()[0])));
+                sendResponse(req, cancel(UUID.fromString(
+                        (String) req.getParams()[0])));
             } else if (req.getMethod().compareTo("cancelAllFrom")
                     == 0 && req.getParams().length == 2
                     && req.getParams()[0] instanceof String) {
                 sendResponse(req, cancelAllFromTo(
-                        (String) req.getParams()[0], (String) req.getParams()[1]));
+                        (String) req.getParams()[0],
+                        (String) req.getParams()[1]));
             }
         }
     }
 
     /**
-     * Cancel all scheduled requests of sender/receiver
+     * Cancel all scheduled requests of sender/receiver.
      *
-     * @param src  sender
+     * @param source  sender
      * @param dest receiver
      * @return
      */
-    private boolean cancelAllFromTo(final String src,
+    private boolean cancelAllFromTo(final String source,
                                     final String dest) {
         taskMap.values().stream()
-                .filter(task -> task.getRequest().getSrc().compareTo(src) == 0
+                .filter(task -> task.getRequest().getSrc().compareTo(source) == 0
                         && task.getRequest().getDest().compareTo(dest) == 0)
                 .forEach(taskMap::remove);
         LinkedList<UUID> toCancel = taskMap.keySet().stream()
-                .filter(key -> taskMap.get(key).getRequest().getSrc().compareTo(src) == 0
+                .filter(key -> taskMap.get(key).getRequest().getSrc().compareTo(source) == 0
                         && taskMap.get(key).getRequest().getDest().compareTo(dest) == 0)
                 .collect(Collectors.toCollection(LinkedList::new));
 
@@ -161,19 +169,20 @@ public class TaskScheduler extends Service implements RequestHandler {
 //                sr.setSequenceNumber(sequenceMap.get(sr.getSequence()));
 //                sequenceMap.put(sr.getSequence(), sequenceMap.get(sr.getSequence()) + 1);
 //            }
-//            System.out.println("task scheduler send sr to " + sr.getDest() + " planned for " + new Date(sr.getExecTime()));
+//            System.out.println("task scheduler send sr to "
+//                      + sr.getDest() + " planned for " + new Date(sr.getExecTime()));
             toExecute.send(sr.toString(), null);
         }
         taskMap.remove(sr.getId());
     }
 
     /**
-     * Cancel a specific scheduled request
+     * Cancel a specific scheduled request.
      *
      * @param id Id of the scheduled request
      * @return
      */
-    public final boolean cancel(UUID id) {
+    public final boolean cancel(final UUID id) {
         if (taskMap.containsKey(id)) {
             taskMap.get(id).getScheduledFuture().cancel(true);
             taskMap.remove(id);
@@ -207,7 +216,7 @@ public class TaskScheduler extends Service implements RequestHandler {
     }
 
     @Override
-    protected RequestHandler getRequestHandler(Request request) {
+    protected final RequestHandler getRequestHandler(final Request request) {
         return this;
     }
 

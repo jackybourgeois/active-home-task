@@ -10,15 +10,15 @@ package org.activehome.task;
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 3 of the 
+ * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public 
+ *
+ * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
@@ -31,7 +31,6 @@ import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author Jacky Bourgeois
- * @version %I%, %G%
  */
 public class Task {
 
@@ -39,29 +38,30 @@ public class Task {
     private ScheduledFuture scheduledFuture;
     private long delayPause;
 
-    public Task(ScheduledRequest sr, ScheduledFuture sf) {
+    public Task(final ScheduledRequest sr,
+                final ScheduledFuture sf) {
         scheduledRequest = sr;
         scheduledFuture = sf;
         delayPause = 0;
     }
 
-    public ScheduledRequest getRequest() {
+    public final ScheduledRequest getRequest() {
         return scheduledRequest;
     }
 
-    public ScheduledFuture getScheduledFuture() {
+    public final ScheduledFuture getScheduledFuture() {
         return scheduledFuture;
     }
 
-    public void setScheduledFuture(ScheduledFuture sf) {
+    public final void setScheduledFuture(final ScheduledFuture sf) {
         scheduledFuture = sf;
     }
 
-    public long getDelayPause() {
+    public final long getDelayPause() {
         return delayPause;
     }
 
-    public void setDelayPause(long delayPause) {
-        this.delayPause = delayPause;
+    public final void setDelayPause(final long delay) {
+        this.delayPause = delay;
     }
 }
